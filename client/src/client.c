@@ -14,7 +14,7 @@ int main(void)
 
 	/* ---------------- LOGGING ---------------- */
 
-	logger = log_create("tp0.log", "logger", true, log_level_from_string("info"));
+	logger = log_create("tp0.log", "logger", 1, log_level_from_string("info"));
 	if(logger == NULL){
 		exit(3);
 	}
@@ -62,7 +62,6 @@ int main(void)
 		exit(3);
 	}
 
-	
 	// Loggeamos el valor de config
 	log_info(logger, valor);
 
@@ -123,6 +122,9 @@ void paquete(int conexion)
 	char* leido;
 	t_paquete* paquete;
 
+	paquete = crear_paquete();
+
+	
 	// Leemos y esta vez agregamos las lineas al paquete
 
 
