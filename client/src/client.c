@@ -64,7 +64,7 @@ int main(void)
 
 	
 	// Loggeamos el valor de config
-	log_info(logger, valor);
+	log_info(logger, "%s", valor);
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
