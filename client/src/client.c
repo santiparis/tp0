@@ -14,25 +14,61 @@ int main(void)
 
 	/* ---------------- LOGGING ---------------- */
 
-	logger = iniciar_logger();
+	logger = log_create("tp0.log", "logger", true, log_level_from_string("info"));
+	if(logger == NULL){
+		exit(3);
+	}
 
 	// Usando el logger creado previamente
 	// Escribi: "Hola! Soy un log"
-
-
+	
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
-	config = iniciar_config();
+	config = config_create("cliente.config");
+	if(config == NULL){
+		exit(3);
+	}
 
 	// Usando el config creado previamente, leemos los valores del config y los 
 	// dejamos en las variables 'ip', 'puerto' y 'valor'
 
-	// Loggeamos el valor de config
+	// Compruebo y obtengo la ip de la config
+	if(config_has_property(config, "IP")){
+		log_info(logger, "IP se encuentra en la config.");
+		ip = config_get_string_value(config, "IP");
+	}
+	else{
+		log_info(logger, "IP no se encuentra en la config, saliendo del programa.");
+		exit(3);
+	}
 
+	// Compruebo y obtengo el puerto de la config
+	if(config_has_property(config, "PUERTO")){
+		log_info(logger, "PUERTO se encuentra en la config.");
+		puerto = config_get_string_value(config, "PUERTO");
+	}
+	else{
+		log_info(logger, "PUERTO no se encuentra en la config, saliendo del programa.");
+		exit(3);
+	}
+
+	// Compruebo y obtengo el valor de la config
+	if(config_has_property(config, "CLAVE")){
+		log_info(logger, "CLAVE se encuentra en la config.");
+		valor = config_get_string_value(config, "CLAVE");
+	}
+	else{
+		log_info(logger, "CLAVE no se encuentra en la config, saliendo del programa.");
+		exit(3);
+	}
+
+	
+	// Loggeamos el valor de config
+	log_info(logger, valor);
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
-	leer_consola(logger);
+	
 
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
@@ -42,6 +78,7 @@ int main(void)
 	conexion = crear_conexion(ip, puerto);
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
+	enviar_mensaje(valor, conexion);
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
@@ -97,4 +134,8 @@ void terminar_programa(int conexion, t_log* logger, t_config* config)
 {
 	/* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config) 
 	  con las funciones de las commons y del TP mencionadas en el enunciado */
+
+	  log_destroy(logger);
+	  config_destroy(config);
+	  liberar_conexion(conexion);
 }

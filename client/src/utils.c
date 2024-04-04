@@ -32,7 +32,11 @@ int crear_conexion(char *ip, char* puerto)
 	int socket_cliente = 0;
 
 	// Ahora que tenemos el socket, vamos a conectarlo
-
+	int err = connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen);
+	
+	if(err){
+		exit(3);
+	}
 
 	freeaddrinfo(server_info);
 
